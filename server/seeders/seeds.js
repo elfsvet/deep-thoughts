@@ -11,8 +11,11 @@ db.once('open', async () => {
   const userData = [];
 
   for (let i = 0; i < 50; i += 1) {
+    // return random username
     const username = faker.internet.userName();
+    // return random email with username in it
     const email = faker.internet.email(username);
+    // return random password
     const password = faker.internet.password();
 
     userData.push({ username, email, password });
