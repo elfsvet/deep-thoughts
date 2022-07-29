@@ -1,4 +1,5 @@
 const express = require('express');
+const path = require('path');
 // import Apollo server
 const { ApolloServer } = require('apollo-server-express');
 
@@ -23,12 +24,20 @@ const app = express();
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
+// serve up static assets
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.static(path.join(__dirname, '../client/build')));
+}
+
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../client/build/index.html'));
+});
+
 // create a new instance of an Apollo server with GraphQL schema
 const startApolloServer = async (typeDefs, resolvers) => {
   await server.start();
   // integrate our Apollo server with the Express application as middleware
   server.applyMiddleware({ app });
-
 
 
   db.once('open', () => {
